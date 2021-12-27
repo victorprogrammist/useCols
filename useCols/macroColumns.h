@@ -1,3 +1,7 @@
+/*
+ * Author Telnov Victor, v-telnov@yandex.ru
+ * This code under licence GPL3
+ */
 
 #ifndef __MACRO_FLD_H__
 #define __MACRO_FLD_H__
