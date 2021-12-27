@@ -1,3 +1,9 @@
+/*
+ * Author Telnov Victor, v-telnov@yandex.ru
+ * This code under licence GPL3
+ *
+ * https://habr.com/ru/post/584392/
+ */
 
 #ifndef __USE_COLS_RANGES_H__
 #define __USE_COLS_RANGES_H__

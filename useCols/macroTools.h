@@ -1,3 +1,9 @@
+/*
+ * Author Telnov Victor, v-telnov@yandex.ru
+ * This code under licence GPL3
+ *
+ * https://habr.com/ru/post/584392/
+ */
 
 #ifndef __MACRO_TOOLS_H__
 #define __MACRO_TOOLS_H__

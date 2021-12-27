@@ -1,6 +1,8 @@
 /*
  * Author Telnov Victor, v-telnov@yandex.ru
  * This code under licence GPL3
+ *
+ * https://habr.com/ru/post/584392/
  */
 
 #ifndef __MACRO_FLD_H__
