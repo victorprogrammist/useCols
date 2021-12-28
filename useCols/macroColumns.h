@@ -16,9 +16,8 @@
 #define IUC21_CLM_HELPER_0__FIELD(X,DUMMY) UseCols::Helpers::asReference(it).X
 
 #define IUC21_CLM_HELPER_0__DECLTYPE_REMOVE_CVREF(X) \
-    typename std::remove_cv< \
-    typename std::remove_reference< \
-        decltype(UseCols::Helpers::asReference(it).X)>::type>::type
+        UseCols::Helpers::remove_cvref< \
+            decltype(UseCols::Helpers::asReference(it).X)>
 
 #define IUC21_CLM_HELPER_0__DECLTYPE_WITH_REFERENCE(X,DUMMY) \
     const IUC21_CLM_HELPER_0__DECLTYPE_REMOVE_CVREF(X)&

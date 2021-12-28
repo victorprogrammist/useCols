@@ -18,17 +18,20 @@ namespace UseCols {
 
 namespace Helpers {
 
-template <class T>
-const T& asReference(const T* p) { return *p; }
+    template <class T>
+    using remove_cvref = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
-template <class T>
-const T& asReference(T* p) { return *p; }
+    template <class T>
+    const T& asReference(const T* p) { return *p; }
 
-template <class T>
-const T& asReference(const T& p) { return p; }
+    template <class T>
+    const T& asReference(T* p) { return *p; }
 
-template <class T>
-const T& asReference(T& p) { return p; }
+    template <class T>
+    const T& asReference(const T& p) { return p; }
+
+    template <class T>
+    const T& asReference(T& p) { return p; }
 }
 
 template<typename... Ts>
@@ -40,16 +43,13 @@ auto membersAccessor(Ts... members) {
 
 namespace Helper_remove_cvref {
 
-    template <class T>
-    using my_remove_cvref = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
-
     template <typename ...T>
     constexpr auto decay_types_helper(std::tuple<T...>)
-        -> std::tuple<my_remove_cvref<T>...>;
+        -> std::tuple<Helpers::remove_cvref<T>...>;
 
     template <typename T>
     constexpr auto decay_types_helper(T)
-        -> my_remove_cvref<T>;
+        -> Helpers::remove_cvref<T>;
 
     template <typename T>
     using decay_types = decltype(decay_types_helper(std::declval<T>()));
