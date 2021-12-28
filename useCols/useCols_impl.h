@@ -16,6 +16,28 @@
 
 namespace UseCols {
 
+namespace Helpers {
+
+template <class T>
+const T& asReference(const T* p) { return *p; }
+
+template <class T>
+const T& asReference(T* p) { return *p; }
+
+template <class T>
+const T& asReference(const T& p) { return p; }
+
+template <class T>
+const T& asReference(T& p) { return p; }
+}
+
+template<typename... Ts>
+auto membersAccessor(Ts... members) {
+    return [members...](const auto &row) {
+        return std::forward_as_tuple(Helpers::asReference(row).*members...);
+    };
+}
+
 namespace Helper_remove_cvref {
 
     template <class T>

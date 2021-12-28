@@ -10,38 +10,53 @@
 
 #include "macroTools.h"
 
-#define APPLY_SPL(FN, NAME, P0, SPL) APPLY(FN, NAME, P0) UNWRAP(SPL)
+// SQ - Sequence
+// IUC21 - inner using cols 2021
+// UC - using cols
 
-#define SEQ_1(SPL, FN, P0, NAME, ...) APPLY(FN, NAME, P0)
-#define SEQ_2(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_1(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_3(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_2(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_4(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_3(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_5(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_4(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_6(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_5(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_7(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_6(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_8(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_7(SPL, FN, P0, __VA_ARGS__))
-#define SEQ_9(SPL, FN, P0, NAME, ...) APPLY_SPL(FN, NAME, P0, SPL) REPACK(SEQ_8(SPL, FN, P0, __VA_ARGS__))
+#define IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_APPLY(FN, NAME, P0) IUC21_UNWRAP(SPL)
 
-#define SEQ_NUM(N, SPL, FN, P0, ...) REPACK(CAT(SEQ_,N)(SPL, FN, P0, __VA_ARGS__))
+#define IUC21_SQ_1(SPL, FN, P0, NAME, ...) IUC21_APPLY(FN, NAME, P0)
 
-#define APPLY(FN, NAME, P0) FN(NAME, UNWRAP(P0))
+#define IUC21_SQ_2(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_1(SPL, FN, P0, __VA_ARGS__))
 
-#define SEQ_HELPER(SPL, FN, P0, ...) \
-    SEQ_NUM(CNT_ARGS(__VA_ARGS__), SPL, FN, P0, __VA_ARGS__)
+#define IUC21_SQ_3(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_2(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_4(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_3(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_5(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_4(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_6(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_5(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_7(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_6(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_8(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_7(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_9(SPL, FN, P0, NAME, ...) \
+    IUC21_APPLY_SPL(FN, NAME, P0, SPL) IUC21_REPACK(IUC21_SQ_8(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_SQ_NUM(N, SPL, FN, P0, ...) \
+    IUC21_REPACK(IUC21_CAT(IUC21_SQ_,N)(SPL, FN, P0, __VA_ARGS__))
+
+#define IUC21_APPLY(FN, NAME, P0) FN(NAME, IUC21_UNWRAP(P0))
+
+#define IUC21_SQ_HELPER(SPL, FN, P0, ...) \
+    IUC21_SQ_NUM(IUC21_CNT_ARGS(__VA_ARGS__), SPL, FN, P0, __VA_ARGS__)
 
 //*************************************************************
 
-#define JOIN(SPL, FN, P0, ...) SEQ_HELPER(FIXWRAP(SPL), FN, FIXWRAP(P0), __VA_ARGS__)
-#define FOREACH(FN, P0, ...)   SEQ_HELPER(FIXWRAP(), FN, FIXWRAP(P0), __VA_ARGS__)
+#define UC_JOIN(SPL, FN, P0, ...) \
+    IUC21_SQ_HELPER(IUC21_FIXWRAP(SPL), FN, IUC21_FIXWRAP(P0), __VA_ARGS__)
 
-//*************************************************************
-#define MULTI_HELPER(NAME,FN,...) FN(NAME, __VA_ARGS__)
-#define MULTI(NAME,P0) MULTI_HELPER(NAME, P0)
+#define UC_FOREACH(FN, P0, ...) \
+    IUC21_SQ_HELPER(IUC21_FIXWRAP(), FN, IUC21_FIXWRAP(P0), __VA_ARGS__)
 
-// sample of using
-// #define USE(NAME,OP,B) int NAME OP B
-// JOIN(;, MULTI, REPACK(USE,=,5), A, B, C);
-
-//*************************************************************
 
 #endif

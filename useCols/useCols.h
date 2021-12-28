@@ -10,6 +10,12 @@
 
 namespace UseCols {
 
+// создает лямбду для доступа к полям элемента
+//  для передачи в параметр getFields,
+//  пример использования: membersAccessor(&Row::field1, &Row::field2)
+template<typename... Ts>
+auto membersAccessor(Ts... members);
+
 // Сортирует список по указанным колонкам по возрастанию значений.
 template <class T, class F>
 void sort(T& collection, const F& getFields);
