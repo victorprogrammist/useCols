@@ -103,8 +103,10 @@ int main(int argc, char *argv[])
     std::cout << "====================================" << std::endl;
     std::cout << "GROUPS by field1" << std::endl;
 
-    UseCols::sort(table1, UC_FIELD(field1));
-    for (auto& range: UseCols::groups(table1, UC_FIELD(field1))) {
+    auto gr1 = UseCols::membersAccessor(&Row::field1);
+
+    UseCols::sort(table1, gr1);
+    for (auto& range: UseCols::groups(table1,gr1)) {
 
         auto [suQty,suSum] = UseCols::sum(range, UC_COLUMNS(qty,sum));
 
@@ -132,10 +134,10 @@ int main(int argc, char *argv[])
     std::cout << "====================================" << std::endl;
     std::cout << "GROUPS by field1, field2" << std::endl;
 
-    auto g12 = UC_COLUMNS(field1,field2);
-    UseCols::sort(table1, g12);
+    auto gr12 = UseCols::membersAccessor(&Row::field1, &Row::field2);
+    UseCols::sort(table1, gr12);
 
-    for (const auto& range: UseCols::groups(table1, g12)) {
+    for (const auto& range: UseCols::groups(table1, gr12)) {
 
         auto [suQty,suSum] = UseCols::sum(range, UC_COLUMNS(qty,sum));
 

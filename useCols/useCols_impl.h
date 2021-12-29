@@ -34,11 +34,29 @@ namespace Helpers {
     const T& asReference(T& p) { return p; }
 }
 
+namespace Helper_membersAccessor {
+
+template<typename T>
+auto membersAccessor(T member) {
+    return [member](const auto &row) -> const auto& {
+        return Helpers::asReference(row).*member;
+    };
+}
+
+template<typename T1, typename... Ts>
+auto membersAccessor(T1 member1, Ts... members) {
+    return [member1, members...](const auto &row) {
+        return std::forward_as_tuple(
+            Helpers::asReference(row).*member1,
+            Helpers::asReference(row).*members...);
+    };
+}
+
+}
+
 template<typename... Ts>
 auto membersAccessor(Ts... members) {
-    return [members...](const auto &row) {
-        return std::forward_as_tuple(Helpers::asReference(row).*members...);
-    };
+    return Helper_membersAccessor::membersAccessor(members...);
 }
 
 namespace Helper_remove_cvref {
