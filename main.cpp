@@ -35,6 +35,23 @@ int main(int argc, char *argv[])
     table1 += Row{1,0,9,8};
     table1 += Row{1,6,9,3};
 
+    //******************************************************
+
+    // варианты выполняющие одно и то же, но с
+    // разными типами доступа до полей
+
+    UseCols::sort(table1, UC_COLUMNS(field1, field2));
+
+    UseCols::sort(table1, UseCols::membersAccessor(&Row::field1, &Row::field2));
+
+    UseCols::sort(table1, &Row::field1, &Row::field2);
+
+    UseCols::sort(table1, [](auto& item) {
+        return std::tuple(item.field1, item.field2); });
+
+    //******************************************************
+
+
     auto funcOut = [&](const std::string& msg) {
         std::cout << "====================================" << std::endl;
         std::cout << "vector<Row> " << msg << std::endl;
@@ -45,7 +62,8 @@ int main(int argc, char *argv[])
     };
 
     //******************************************************
-    UseCols::sort(table1, UC_FIELD(sum));
+
+    UseCols::sort(table1, &Row::sum);
     funcOut("sort by: Row::sum");
 
     UseCols::sort(table1, UC_COLUMNS(field1,field2));
@@ -56,7 +74,7 @@ int main(int argc, char *argv[])
     std::cout << "vector<Row>, findSorted: field1, field2 == {2,3}" << std::endl;
     std::cout << "qty, sum => [" << itr1->qty << ", " << itr1->sum << "]" << std::endl;
 
-    auto itr2 = UseCols::findSorted(table1, UC_COLUMNS(field1), 4);
+    auto itr2 = UseCols::findSorted(table1, UC_FIELD(field1), 4);
     std::cout << "vector<Row>, findSorted: field1 == 4" << std::endl;
     std::cout << "qty, sum => [" << itr2->qty << ", " << itr2->sum << "]" << std::endl;
 
@@ -80,7 +98,7 @@ int main(int argc, char *argv[])
     //******************************************************
 
     std::cout << "====================================" << std::endl;
-    std::cout << "sum by column sum: " << UseCols::sum(table2, UC_FIELD(sum)) << std::endl;
+    std::cout << "sum by column sum: " << UseCols::sum(table2, &Row::sum) << std::endl;
 
     auto [suQty, suSum] = UseCols::sum(table2, UC_COLUMNS(qty,sum));
     std::cout << "simultaneously sums of [qty, sum]: " << suQty << ", " << suSum << std::endl;
@@ -122,12 +140,12 @@ int main(int argc, char *argv[])
             std::cout << " == row: field2, qty, sum: "
             << row.field2 << ", " << row.qty << ", " << row.sum << std::endl;
 
-        UseCols::sort(range, UC_FIELD(field2));
-        for (auto& r2: UseCols::groups(range, UC_FIELD(field2)))
+        UseCols::sort(range, &Row::field2);
+        for (auto& r2: UseCols::groups(range, &Row::field2))
             std::cout << " ==== group lev2: field2, sum(qty), sum(sum): "
             << r2->field2
-            << ", " << UseCols::sum(r2, UC_FIELD(qty))
-            << ", " << UseCols::sum(r2, UC_FIELD(sum))
+            << ", " << UseCols::sum(r2, &Row::qty)
+            << ", " << UseCols::sum(r2, &Row::sum)
             << std::endl;
     }
 

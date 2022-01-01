@@ -118,7 +118,6 @@ namespace Helper_setMinMax {
     }
 }
 
-
 template <class T, class F>
 void sort(T& collection, const F& getFields) {
 
@@ -128,6 +127,11 @@ void sort(T& collection, const F& getFields) {
     };
 
     std::sort(collection.begin(), collection.end(), compare);
+}
+
+template <class L, class R, class I, class ...M>
+void sort(L& collection, R I::* member1, M... members) {
+    sort(collection, membersAccessor(member1, members...));
 }
 
 template <class T, class F>
@@ -141,6 +145,11 @@ void sortDesc(T& collection, const F& getFields) {
     std::sort(collection.begin(), collection.end(), compare);
 }
 
+template <class L, class R, class I, class ...M>
+void sortDesc(L& collection, R I::* member1, M... members) {
+    sortDesc(collection, membersAccessor(member1, members...));
+}
+
 template <class T, class F>
 auto sum(const T& collection, const F& getFields) {
 
@@ -151,6 +160,11 @@ auto sum(const T& collection, const F& getFields) {
         Helper_append::append(res, getFields(v));
 
     return res;
+}
+
+template <class L, class R, class I, class ...M>
+auto sum(const L& collection, R I::* member1, M... members) {
+    return sum(collection, membersAccessor(member1, members...));
 }
 
 template <class T, class F>
@@ -187,9 +201,19 @@ auto maxItem(T& collection, const F& getFields) {
     return minMaxItem(collection, true, getFields);
 }
 
+template <class L, class R, class I, class ...M>
+auto maxItem(const L& collection, R I::* member1, M... members) {
+    return maxItem(collection, membersAccessor(member1, members...));
+}
+
 template <class T, class F>
 auto minItem(T& collection, const F& getFields) {
     return minMaxItem(collection, false, getFields);
+}
+
+template <class L, class R, class I, class ...M>
+auto minItem(const L& collection, R I::* member1, M... members) {
+    return minItem(collection, membersAccessor(member1, members...));
 }
 
 template <class T, class F>
@@ -221,9 +245,19 @@ auto minValue(T& collection, const F& getFields) {
     return minMaxValue(collection, false, getFields);
 }
 
+template <class L, class R, class I, class ...M>
+auto minValue(const L& collection, R I::* member1, M... members) {
+    return minValue(collection, membersAccessor(member1, members...));
+}
+
 template <class T, class F>
 auto maxValue(T& collection, const F& getFields) {
     return minMaxValue(collection, true, getFields);
+}
+
+template <class L, class R, class I, class ...M>
+auto maxValue(const L& collection, R I::* member1, M... members) {
+    return maxValue(collection, membersAccessor(member1, members...));
 }
 
 template <class T, class F>
@@ -231,9 +265,19 @@ auto minValue2(T& collection, const F& getFields) {
     return minValue(collection, getFields).first;
 }
 
+template <class L, class R, class I, class ...M>
+auto minValue2(const L& collection, R I::* member1, M... members) {
+    return minValue2(collection, membersAccessor(member1, members...));
+}
+
 template <class T, class F>
 auto maxValue2(T& collection, const F& getFields) {
     return maxValue(collection, getFields).first;
+}
+
+template <class L, class R, class I, class ...M>
+auto maxValue2(const L& collection, R I::* member1, M... members) {
+    return maxValue2(collection, membersAccessor(member1, members...));
 }
 
 template <class T, class F, class ...V>
@@ -277,6 +321,11 @@ template <class T, class F>
 auto groups(T& list, const F& getFields) {
     using Itr = decltype(list.begin());
     return Groups<Itr,F>(list, getFields);
+}
+
+template <class L, class R, class I, class ...M>
+auto groups(const L& list, R I::* member1, M... members) {
+    return groups(list, membersAccessor(member1, members...));
 }
 
 }
